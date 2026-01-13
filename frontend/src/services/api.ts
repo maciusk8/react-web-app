@@ -11,10 +11,10 @@ import type {
     CreateCommentRequest,
 } from '../types/types';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = '/api';
 
 // Backend serves images from /images/
-const IMAGE_BASE_URL = 'http://localhost:8080/images';
+const IMAGE_BASE_URL = '/images';
 
 // Transform backend response to frontend format
 function transformPerfume(raw: RawPerfume): Perfume {

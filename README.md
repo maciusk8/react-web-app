@@ -1,18 +1,18 @@
-# Perphorum - Analiza i Dokumentacja Systemu
+# Perphorum - Dokumentacja Systemu
 
 Projekt implementujący portal społecznościowy dla pasjonatów perfum, inspirowany serwisami takimi jak **Filmweb** oraz **Fragrantica**. Aplikacja umożliwia przeglądanie bazy zapachów, ich recenzowanie, tworzenie własnych kolekcji oraz interakcję z innymi użytkownikami.
 
 ---
 
 ## 👥 Autorzy
-*   **Maciej Mikołajek**
-*   **Mateusz Wróbel**
+*   **Maciej Mikołajek** - [GitHub](https://github.com/maciusk8)
+*   **Mateusz Wróbel** - [GitHub](https://github.com/mateuszwroobel)
 
 ---
 
 ## Architektura Systemu
 
-System został zrealizowany w architekturze **Client-Server** (Single Page Application + REST API). Codebase podzielony jest na dwie niezależne części: `frontend` (React) oraz `backend` (Spring Boot).
+System został zrealizowany w architekturze **Client-Server** (Single Page Application + REST API). Codebase podzielony jest na dwie niezależne części: `frontend` (React) oraz `backend` (Spring Boot, Java 25).
 
 ### Stos Technologiczny
 
@@ -24,10 +24,13 @@ System został zrealizowany w architekturze **Client-Server** (Single Page Appli
 *   **Vite**: Build tool zapewniający szybki development.
 
 #### Backend (Warstwa Logiki Biznesowej)
-*   **Spring Boot 3 (Java 17)**: Framework aplikacyjny.
-*   **Spring Security**: Bezpieczeństwo i autentykacja (Stateless, JWT).
-*   **Spring Data JPA**: Warstwa dostępu do danych (ORM).
+*   **Spring Boot 3**: Framework aplikacyjny (REST API, Dependency Injection).
+*   **Spring Security**: Bezpieczeństwo i autentykacja (Stateless).
+*   **JJWT (Java JSON Web Token)**: Implementacja standardu JWT do generowania i walidacji tokenów.
+*   **Spring Data JPA (Hibernate)**: Warstwa dostępu do danych (ORM).
 *   **H2 Database**: Baza in-memory (dla łatwej demonstracji i testów), skonfigurowana do seedowania danymi startowymi.
+*   **Lombok**: Biblioteka redukująca boilerplate code (automatyczne gettery, settery, buildery).
+*   **Jackson**: Serializacja i deserializacja danych do formatu JSON.
 
 ---
 
@@ -39,12 +42,36 @@ Poniższa tabela przedstawia, w jaki sposób zrealizowano kluczowe funkcjonalno�
 | :--- | :--- |
 | **Katalog Perfum** | Baza danych zawierająca szczegółowe informacje: Marka, Nazwa, Rodzina Zapachowa, Nuty, Opis, Zdjęcie. Zaawansowane filtrowanie po płci, marce i składnikach. |
 | **System Ocen** | Użytkownicy mogą oceniać perfumy (1-5 gwiazdek). System automatycznie wylicza średnią ocenę. |
-| **Recenzje i Dyskusje** | Możliwość dodawania rozbudowanych recenzji tekstowych. Inni użytkownicy mogą je komentować. |
-| **Profile Użytkowników** | Każdy użytkownik posiada publiczny profil prezentujący jego aktywność (ostatnie recenzje) oraz statystyki. |
+| **Recenzje i Dyskusje** | Możliwość dodawania rozbudowanych recenzji tekstowych. Inni użytkownicy mogą je komentować i lajkować. |
+| **Profile Użytkowników** | Każdy użytkownik posiada publiczny profil prezentujący jego aktywność. |
 | **Wirtualne Półki** | Funkcjonalność "Posiadam" (Kolekcja) oraz "Chcę mieć" (Wishlist), widoczna na profilu użytkownika. |
-| **Społeczność** | System znajomych ("Obserwowani"). Feed aktywności (`FriendsPage`) agregujący recenzje znajomych. |
-| **Rankingi** | Dynamicznie generowana lista "Top Perfumy" sortowana według średniej ocen (algorytm podobny do Top 100 Filmwebu). |
+| **Społeczność** | System znajomych. Feed aktywności (`FriendsPage`) agregujący recenzje znajomych. |
+| **Rankingi** | Dynamicznie generowana lista "Top Perfumy" sortowana według średniej ocen. |
 | **Bezpieczeństwo** | Rejestracja, logowanie (JWT/BCrypt), ochrona routingu (User/Admin), zabezpieczenie przed atakami (np. XSS, infinite recursion w JSON). |
+| **Monetyzacja** | Serwis umożliwia komercjalizację dzięki artykułom sponsorowanym wyświetlanym na stronie głównej (Hero Section). |
+
+
+---
+
+## Galeria
+
+### Strona Główna
+![Strona Główna](screenshots/home.png)
+
+### Ranking Perfum
+![Ranking](screenshots/ranking.png)
+
+### Szczegóły Perfum
+![Strona Perfum](screenshots/strona%20perfum.png)
+
+### Katalog (Męskie)
+![Katalog Męskie](screenshots/meskie.png)
+
+### Feed Aktywności
+![Feed](screenshots/feed.png)
+
+### Profil Użytkownika
+![Twój Profil](screenshots/moj%20profil.png)
 
 ---
 
@@ -57,8 +84,11 @@ Aplikacja wykorzystuje relacyjny model danych. Kluczowe encje:
 *   **`Review`**: Opinia użytkownika łącząca `AppUser` z `Perfume`.
 *   **`Comment`**: Komentarz pod recenzją.
 
+
 **Seedowanie danych**:
 Podczas startu backendu, klasa `DataLoader.java` sprawdza stan bazy. Jeśli jest pusta (lub prawie pusta), automatycznie ładuje kilkaset rekordów perfum z pliku `perfumes.json` oraz tworzy przykładowych użytkowników i recenzje, aby system "żył" od pierwszego uruchomienia.
+
+*Dane perfum pochodzą ze zbioru: [HuggingFace - Perfume Dataset](https://huggingface.co/datasets/doevent/perfume/tree/main?not-for-all-audiences=true).*
 
 ---
 
@@ -67,11 +97,11 @@ Podczas startu backendu, klasa `DataLoader.java` sprawdza stan bazy. Jeśli jest
 Projekt składa się z dwóch niezależnych serwerów, które muszą działać jednocześnie:
 
 *   **Backend (Spring Boot)**: Działa na porcie `8080`.
-*   **Frontend (Vite/React)**: Działa na porcie `5173`.
+*   **Frontend (Vite/React)**: Działa na porcie `5175`.
 
 ---
 
-## 🔑 Konta Testowe
+## Konta Testowe
 
 Dla ułatwienia weryfikacji przygotowano gotowe konta testowe z przypisanymi rolami. Znajdują się one również w tabelce na stronie logowania.
 
@@ -154,9 +184,11 @@ perphorum/
 ├── frontend/                   # Aplikacja React
 │   ├── src/
 │   │   ├── components/         # Komponenty wielokrotnego użytku
-│   │   ├── pages/              # Główne widoki stron
-│   │   ├── context/            # Logika globalna (Auth)
-│   │   └── services/           # Klient API
+│   │   ├── pages/              # Widoki (Auth, Gender, Brand)
+│   │   ├── services/           # Komunikacja z API
+│   │   ├── context/            # Context API (Auth)
+│   │   └── [FeaturePages]/     # Moduły stron (Home, Profile, Product...)
 │   └── package.json
+├── screenshots/                # Zrzuty ekranu do dokumentacji
 └── README.md                   # Ten dokument
 ```
