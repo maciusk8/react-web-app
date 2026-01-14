@@ -24,6 +24,7 @@ System został zrealizowany w architekturze **Client-Server** (Single Page Appli
 *   **Vite**: Build tool zapewniający szybki development.
 
 #### Backend (Warstwa Logiki Biznesowej)
+*   ***Java 25**: Główny język aplikacji backendowej, uruchamiany na platformie JVM; zapewnia silne typowanie, wielowątkowość, wysoką wydajność oraz bogaty ekosystem bibliotek
 *   **Spring Boot 3**: Framework aplikacyjny (REST API, Dependency Injection).
 *   **Spring Security**: Bezpieczeństwo i autentykacja (Stateless).
 *   **JJWT (Java JSON Web Token)**: Implementacja standardu JWT do generowania i walidacji tokenów.
